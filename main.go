@@ -46,7 +46,7 @@ func NewRouter() *mux.Router {
 }
 
 func init() {
-	file, _ := os.Open("conf.json")
+	file, _ := os.Open("secrets.json")
 	decoder := json.NewDecoder(file)
 	err := decoder.Decode(&Config)
 	if err != nil {
