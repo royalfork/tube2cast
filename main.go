@@ -2,6 +2,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -10,7 +11,11 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var YT_KEY string = os.Getenv("YT_KEY")
+var Config ConfigObj
+
+type ConfigObj struct {
+	YT_KEY string
+}
 
 type Route struct {
 	Method      string
@@ -41,11 +46,12 @@ func NewRouter() *mux.Router {
 }
 
 func init() {
-	// ensure we have a yt api key from an env var
-	if YT_KEY == "" {
-		panic("Need youtube api key")
+	file, _ := os.Open("conf.json")
+	decoder := json.NewDecoder(file)
+	err := decoder.Decode(&Config)
+	if err != nil {
+		panic("Can't read config")
 	}
-	fmt.Printf("YT_KEY = %+v\n", YT_KEY)
 }
 
 func main() {

@@ -164,7 +164,7 @@ type TokenPagination struct {
 func getPlaylistItems(id string) *PlaylistItemListResponse {
 	url := baseURL +
 		"playlistItems" +
-		"?key=" + YT_KEY +
+		"?key=" + Config.YT_KEY +
 		"&playlistId=" + id +
 		"&part=snippet" +
 		"&maxResults=5"
