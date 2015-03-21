@@ -5,9 +5,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 )
+
+var YT_KEY string = os.Getenv("YT_KEY")
 
 type Route struct {
 	Method      string
@@ -18,8 +21,8 @@ type Route struct {
 type Routes []Route
 
 var routes = Routes{
-	Route{"GET", "/pl/{id:[a-z0-9]+}", GetPlaylist},
-	Route{"GET", "/asset/{id:[a-z0-9]+}", GetAsset},
+	Route{"GET", "/pl/{id:[A-Za-z0-9_-]+}", GetPlaylist},
+	Route{"GET", "/asset/{id:[A-Za-z0-9_-]+}", GetAsset},
 }
 
 func NewRouter() *mux.Router {
@@ -35,6 +38,14 @@ func NewRouter() *mux.Router {
 
 	}
 	return router
+}
+
+func init() {
+	// ensure we have a yt api key from an env var
+	if YT_KEY == "" {
+		panic("Need youtube api key")
+	}
+	fmt.Printf("YT_KEY = %+v\n", YT_KEY)
 }
 
 func main() {
