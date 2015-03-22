@@ -54,7 +54,19 @@ func init() {
 	}
 }
 
+func scratch() {
+	plist := getPlaylist("PLOJf220fGDZenl4x_jsukPVstJZ7-3FV-")
+	fmt.Printf("plist.Snippet.Title = %+v\n", plist.Snippet.Title)
+	fmt.Printf("plist.Snippet.Description = %+v\n", plist.Snippet.Description)
+	plist.PopulatePlaylistItems()
+	for _, item := range plist.PlaylistItems {
+		fmt.Println(item.Snippet.Title)
+	}
+}
+
 func main() {
+	scratch()
+	return
 	router := NewRouter()
 	fmt.Println("Server is running....")
 	log.Fatal(http.ListenAndServe(":8080", router))
