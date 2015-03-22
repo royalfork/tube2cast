@@ -1,6 +1,8 @@
 // Package main provides ...
 package main
 
+import "fmt"
+
 // api url for playlists and playlist items
 const baseURL string = "https://www.googleapis.com/youtube/v3/"
 
@@ -53,6 +55,10 @@ type PlaylistItem struct {
 	// Details: populated by a vall to video api part content details
 	// populated from Playlist.GetItemsDetails
 	Details *VideoContentDetails
+}
+
+func (plItem PlaylistItem) GetLink() string {
+	return fmt.Sprintf("https://www.youtube.com/watch?v=%v&list=%s&index=%v", plItem.Snippet.ResourceId.VideoId, plItem.Snippet.ResourceId.PlaylistId, plItem.Snippet.Position)
 }
 
 type PlaylistItemSnippet struct {

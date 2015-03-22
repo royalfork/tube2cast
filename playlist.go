@@ -117,6 +117,10 @@ type PlaylistSnippet struct {
 	Title string `json:"title,omitempty"`
 }
 
+func (pl *Playlist) GetLink() string {
+	return "https://www.youtube.com/playlist?list=" + pl.Id
+}
+
 // makes youtube api request for items in playlist
 // returns PlaylistItemListResponse
 func (pl *Playlist) PopulatePlaylistItems() error {
@@ -195,7 +199,6 @@ func (pl *Playlist) GetItemsDetails() {
 		idx := ids[video.Id]
 		pl.PlaylistItems[idx].Details = video.ContentDetails
 	}
-
 }
 
 func NewPlaylist(id string) *Playlist {

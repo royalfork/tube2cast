@@ -3,6 +3,7 @@ package main
 
 import (
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"log"
 	"net/http"
@@ -56,14 +57,29 @@ func init() {
 
 func scratch() {
 	plist := NewPlaylist("PLOJf220fGDZenl4x_jsukPVstJZ7-3FV-")
-	fmt.Printf("plist.Snippet.Title = %+v\n", plist.Snippet.Title)
-	fmt.Printf("plist.Snippet.Description = %+v\n", plist.Snippet.Description)
 	plist.PopulatePlaylistItems()
 	plist.GetItemsDetails()
-	for _, item := range plist.PlaylistItems {
-		fmt.Println(item.Snippet.Title)
-		fmt.Println(item.Details.Duration)
+	dec, _ := json.Marshal(plist)
+	fmt.Printf("dec = %+v\n", dec)
+
+	//plist := Playlist{}
+	//file, _ := os.Open("sample.json")
+	//decoder := json.NewDecoder(file)
+	//err := decoder.Decode(&plist)
+	//if err != nil {
+	//panic(err)
+	//}
+
+	//fmt.Printf("plist = %+v\n", plist)
+	feed := NewFeed(*plist)
+	fmt.Printf("feed = %+v\n", feed)
+
+	xml, err := xml.MarshalIndent(feed, "", "  ")
+	if err != nil {
+		panic(err)
 	}
+	fmt.Printf("string(xml) = %+v\n", string(xml))
+
 }
 
 func main() {
