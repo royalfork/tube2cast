@@ -59,8 +59,10 @@ func scratch() {
 	fmt.Printf("plist.Snippet.Title = %+v\n", plist.Snippet.Title)
 	fmt.Printf("plist.Snippet.Description = %+v\n", plist.Snippet.Description)
 	plist.PopulatePlaylistItems()
+	plist.GetItemsDetails()
 	for _, item := range plist.PlaylistItems {
 		fmt.Println(item.Snippet.Title)
+		fmt.Println(item.Details.Duration)
 	}
 }
 
