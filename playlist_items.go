@@ -37,6 +37,18 @@ type PlaylistItemListResponse struct {
 	VisitorId string `json:"visitorId,omitempty"`
 }
 
+// the API returns deleted videos in the feed.  this method delted them from Items
+func (plilr *PlaylistItemListResponse) RemoveDeleted() []*PlaylistItem {
+	nonDeletedItems := make([]*PlaylistItem, 0)
+	for _, item := range plilr.Items {
+		if item.Snippet.Title != "Deleted video" { // XXX this feels like a hack, but i think it's the only way
+			nonDeletedItems = append(nonDeletedItems, item)
+		}
+	}
+	fmt.Printf("nonDeletedItems = %+v\n", nonDeletedItems)
+	return nonDeletedItems
+}
+
 type PlaylistItem struct {
 	// Etag: Etag of this resource.
 	Etag string `json:"etag,omitempty"`
