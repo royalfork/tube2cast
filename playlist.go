@@ -131,7 +131,7 @@ func (pl *Playlist) PopulatePlaylistItems() error {
 		"?key=" + Config.YT_KEY +
 		"&playlistId=" + pl.Id +
 		"&part=snippet" +
-		"&maxResults=10"
+		"&maxResults=2"
 
 	// make request, get body
 	resp, err := http.Get(url)

@@ -7,6 +7,7 @@ import (
 
 type Feed struct {
 	XMLName     xml.Name
+	ItunesNS    string      `xml:"xmlns:itunes,attr"`
 	Version     string      `xml:"version,attr"`
 	FeedChannel interface{} `xml:"channel"`
 }
@@ -41,7 +42,7 @@ type FeedItem struct {
 	Link        string          `xml:"link"`
 	Description string          `xml:"description"`
 	Duration    string          `xml:"itunes:duration"` // form hh:mm:ss
-	Content     FeedContent     `xml:"media:content"`
+	Content     FeedContent     `xml:"enclosure"`
 	Image       FeedImageItunes `xml:"itunes:image,omitempty"`
 }
 
@@ -53,13 +54,13 @@ type FeedContent struct {
 func NewFeedItem(plItem *PlaylistItem) *FeedItem {
 	item := FeedItem{
 		Title:       plItem.Snippet.Title,
-		PubDate:     plItem.Snippet.PublishedAt,
+		PubDate:     Iso8601ToRfc1123(plItem.Snippet.PublishedAt),
 		Link:        plItem.GetLink(),
 		Description: plItem.Snippet.Description,
-		Duration:    plItem.Details.Duration,
+		Duration:    plItem.Details.DurationToItunesFormat(),
 	}
 	content := FeedContent{
-		Url:  "http://LOCALHOST",
+		Url:  "http://localhost/asset/" + plItem.Id + ".mp3",
 		Type: "audio/mpeg",
 	}
 	item.Content = content
@@ -80,7 +81,7 @@ func NewFeed(pl Playlist) *Feed {
 			Link:  pl.GetLink(),
 		},
 		Link:    pl.GetLink(),
-		PubDate: pl.Snippet.PublishedAt,
+		PubDate: Iso8601ToRfc1123(pl.Snippet.PublishedAt),
 		Ttl:     60,
 	}
 
@@ -95,7 +96,12 @@ func NewFeed(pl Playlist) *Feed {
 
 	// create RSS wrapper for channel
 	rss := xml.Name{"", "rss"}
-	feed := Feed{rss, "2.0", ch}
+	feed := Feed{
+		XMLName:     rss,
+		Version:     "2.0",
+		ItunesNS:    "http://www.itunes.com/dtds/podcast-1.0.dtd",
+		FeedChannel: ch,
+	}
 
 	return &feed
 }

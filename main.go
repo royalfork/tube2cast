@@ -28,6 +28,7 @@ type Routes []Route
 
 var routes = Routes{
 	Route{"GET", "/pl/{id:[A-Za-z0-9_-]+}", GetPlaylist},
+	Route{"GET", "/test", Test},
 	Route{"GET", "/asset/{id:[A-Za-z0-9_-]+}", GetAsset},
 }
 
@@ -55,36 +56,7 @@ func init() {
 	}
 }
 
-func scratch() {
-	plist := NewPlaylist("PLOJf220fGDZenl4x_jsukPVstJZ7-3FV-")
-	plist.PopulatePlaylistItems()
-	plist.GetItemsDetails()
-	dec, _ := json.Marshal(plist)
-	fmt.Printf("dec = %+v\n", dec)
-
-	//plist := Playlist{}
-	//file, _ := os.Open("sample.json")
-	//decoder := json.NewDecoder(file)
-	//err := decoder.Decode(&plist)
-	//if err != nil {
-	//panic(err)
-	//}
-
-	//fmt.Printf("plist = %+v\n", plist)
-	feed := NewFeed(*plist)
-	fmt.Printf("feed = %+v\n", feed)
-
-	xml, err := xml.MarshalIndent(feed, "", "  ")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("string(xml) = %+v\n", string(xml))
-
-}
-
 func main() {
-	scratch()
-	return
 	router := NewRouter()
 	fmt.Println("Server is running....")
 	log.Fatal(http.ListenAndServe(":8080", router))

@@ -1,6 +1,12 @@
 // Package main provides ...
 package main
 
+import (
+	"fmt"
+	"regexp"
+	"strconv"
+)
+
 type VideoListResponse struct {
 	// Etag: Etag of this resource.
 	Etag string `json:"etag,omitempty"`
@@ -165,4 +171,14 @@ type VideoContentDetails struct {
 	// will contain either the contentDetails.regionRestriction.allowed
 	// property or the contentDetails.regionRestriction.blocked property.
 	//RegionRestriction *VideoContentDetailsRegionRestriction `json:"regionRestriction,omitempty"`
+}
+
+func (vcd VideoContentDetails) DurationToItunesFormat() string {
+	// convert PT99H59M59S -> 99:59:59
+	r, _ := regexp.Compile("^PT(([0-9]{1,2})H)?(([0-9]{1,2})M)?(([0-9]{1,2})S)?")
+	matches := r.FindStringSubmatch(vcd.Duration)
+	hr, _ := strconv.Atoi(matches[2])
+	min, _ := strconv.Atoi(matches[4])
+	sec, _ := strconv.Atoi(matches[6])
+	return fmt.Sprintf("%02d:%02d:%02d", hr, min, sec)
 }
